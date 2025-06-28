@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduSys - Gestão de Professores</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #3b82f6;
+      --secondary: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #06b6d4;
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --gray: #64748b;
+      --gray-light: #e2e8f0;
+      --white: #ffffff;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --radius-sm: 0.25rem;
+      --radius: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f1f5f9;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--white);
+      padding: 1.5rem 0;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      font-size: 2rem;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-link {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 0;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      opacity: 0.9;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--white);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-link.active {
+      font-weight: 600;
+    }
+
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    /* Main Content */
+    .main {
+      padding: 2rem 0;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .page-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--white);
+    }
+
+    .btn-secondary:hover {
+      background-color: #0d9f6e;
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: var(--white);
+    }
+
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+
+    /* Card */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    /* Search and Filter */
+    .search-filter {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 250px;
+      padding: 0.625rem 1rem;
+      border: 1px solid var(--gray-light);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .filter-select {
+      padding: 0.625rem 1rem;
+      border: 1px solid var(--gray-light);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background-color: var(--white);
+      cursor: pointer;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* Table */
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table thead {
+      background-color: var(--primary);
+      color: var(--white);
+    }
+
+    .table th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .table tbody tr {
+      border-bottom: 1px solid var(--gray-light);
+      transition: all 0.3s ease;
+    }
+
+    .table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .table tbody tr:hover {
+      background-color: rgba(59, 130, 246, 0.05);
+    }
+
+    .table td {
+      padding: 1rem;
+      vertical-align: middle;
+    }
+
+    .teacher-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 0.75rem;
+    }
+
+    .teacher-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .teacher-name {
+      font-weight: 500;
+    }
+
+    .teacher-id {
+      font-size: 0.75rem;
+      color: var(--gray);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .badge-active {
+      background-color: rgba(16, 185, 129, 0.1);
+      color: var(--secondary);
+    }
+
+    .badge-inactive {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+
+    .subject-badge {
+      background-color: rgba(59, 130, 246, 0.1);
+      color: var(--primary);
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+      display: inline-block;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+      background-color: var(--gray-light);
+    }
+
+    .action-btn.edit {
+      color: var(--primary);
+    }
+
+    .action-btn.delete {
+      color: var(--danger);
+    }
+
+    .action-btn.view {
+      color: var(--secondary);
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    .page-item {
+      list-style: none;
+    }
+
+    .page-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background-color: var(--white);
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: 1px solid var(--gray-light);
+    }
+
+    .page-link:hover {
+      background-color: var(--gray-light);
+    }
+
+    .page-link.active {
+      background-color: var(--primary);
+      color: var(--white);
+      border-color: var(--primary);
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--dark);
+      color: var(--white);
+      padding: 2rem 0;
+      margin-top: 3rem;
+    }
+
+    .footer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-logo-icon {
+      font-size: 1.5rem;
+    }
+
+    .footer-logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .footer-text {
+      color: var(--gray-light);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      max-width: 600px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-link {
+      color: var(--gray-light);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--white);
+    }
+
+    .copyright {
+      color: var(--gray-light);
+      font-size: 0.75rem;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .header-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+
+      .page-title {
+        font-size: 1.75rem;
+      }
+
+      .table th, .table td {
+        padding: 0.75rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .page-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .search-filter {
+        flex-direction: column;
+      }
+
+      .search-input, .filter-select {
+        width: 100%;
+      }
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: var(--white);
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--gray-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray);
+      transition: color 0.3s ease;
+    }
+
+    .modal-close:hover {
+      color: var(--danger);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.625rem 1rem;
+      border: 1px solid var(--gray-light);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 0.625rem 1rem;
+      border: 1px solid var(--gray-light);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background-color: var(--white);
+      cursor: pointer;
+    }
+
+    .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .form-multiselect {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.625rem 1rem;
+      border: 1px solid var(--gray-light);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background-color: var(--white);
+      cursor: pointer;
+    }
+
+    .form-multiselect:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .modal-footer {
+      padding: 1.5rem;
+      border-top: 1px solid var(--gray-light);
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
+    /* Loading */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--gray-light);
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      color: var(--gray-light);
+      margin-bottom: 1rem;
+    }
+
+    .empty-state-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state-text {
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="logo-text">EduSys</div>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Dashboard</a>
+        <a href="aluno.html" class="nav-link">Alunos</a>
+        <a href="professor.html" class="nav-link active">Professores</a>
+        <a href="#" class="nav-link">Turmas</a>
+        <a href="#" class="nav-link">Relatórios</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title">Gestão de Professores</h1>
+        <div class="page-actions">
+          <button class="btn btn-primary" id="addTeacherBtn">
+            <i class="fas fa-plus"></i> Adicionar Professor
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="search-filter">
+          <input type="text" class="search-input" placeholder="Pesquisar professores...">
+          <select class="filter-select">
+            <option value="all">Todos os status</option>
+            <option value="active">Ativos</option>
+            <option value="inactive">Inativos</option>
+          </select>
+          <select class="filter-select">
+            <option value="all">Todas as disciplinas</option>
+            <option value="matematica">Matemática</option>
+            <option value="portugues">Português</option>
+            <option value="historia">História</option>
+            <option value="geografia">Geografia</option>
+          </select>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Professor</th>
+                <th>Matrícula</th>
+                <th>Disciplinas</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="teachersTableBody">
+              <!-- Dados serão carregados via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <ul>
+            <li class="page-item"><a href="#" class="page-link">1</a></li>
+            <li class="page-item"><a href="#" class="page-link">2</a></li>
+            <li class="page-item"><a href="#" class="page-link active">3</a></li>
+            <li class="page-item"><a href="#" class="page-link">4</a></li>
+            <li class="page-item"><a href="#" class="page-link">5</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal Adicionar/Editar Professor -->
+  <div class="modal" id="teacherModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Adicionar Novo Professor</h3>
+        <button class="modal-close" id="closeModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="teacherForm">
+          <div class="form-group">
+            <label for="teacherName" class="form-label">Nome Completo</label>
+            <input type="text" id="teacherName" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="teacherEmail" class="form-label">Email</label>
+            <input type="email" id="teacherEmail" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="teacherPhone" class="form-label">Telefone</label>
+            <input type="tel" id="teacherPhone" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="teacherBirth" class="form-label">Data de Nascimento</label>
+            <input type="date" id="teacherBirth" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="teacherSubjects" class="form-label">Disciplinas</label>
+            <select id="teacherSubjects" class="form-multiselect" multiple required>
+              <option value="matematica">Matemática</option>
+              <option value="portugues">Português</option>
+              <option value="historia">História</option>
+              <option value="geografia">Geografia</option>
+              <option value="ciencias">Ciências</option>
+              <option value="ingles">Inglês</option>
+              <option value="artes">Artes</option>
+              <option value="educacao-fisica">Educação Física</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="teacherStatus" class="form-label">Status</label>
+            <select id="teacherStatus" class="form-select" required>
+              <option value="active">Ativo</option>
+              <option value="inactive">Inativo</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="cancelBtn">Cancelar</button>
+        <button class="btn btn-primary" id="saveTeacherBtn">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container footer-container">
+      <div class="footer-logo">
+        <div class="footer-logo-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="footer-logo-text">EduSys</div>
+      </div>
+      <p class="footer-text">Sistema de Gestão Escolar completo para instituições de ensino de todos os portes.</p>
+      <div class="footer-links">
+        <a href="#" class="footer-link">Termos de Serviço</a>
+        <a href="#" class="footer-link">Política de Privacidade</a>
+        <a href="#" class="footer-link">Contato</a>
+        <a href="#" class="footer-link">Suporte</a>
+      </div>
+      <p class="copyright">© 2023 EduSys. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Dados de exemplo
+      const teachers = [
+        {
+          id: 1,
+          name: "Carlos Mendes",
+          avatar: "https://randomuser.me/api/portraits/men/11.jpg",
+          email: "carlos.mendes@escola.com",
+          phone: "(11) 98765-1111",
+          registration: "PROF2023001",
+          subjects: ["matematica", "fisica"],
+          status: "active",
+          birthDate: "1980-05-15"
+        },
+        {
+          id: 2,
+          name: "Ana Paula Souza",
+          avatar: "https://randomuser.me/api/portraits/women/11.jpg",
+          email: "ana.souza@escola.com",
+          phone: "(11) 98765-2222",
+          registration: "PROF2023002",
+          subjects: ["portugues", "literatura"],
+          status: "active",
+          birthDate: "1982-07-22"
+        },
+        {
+          id: 3,
+          name: "Roberto Almeida",
+          avatar: "https://randomuser.me/api/portraits/men/12.jpg",
+          email: "roberto.almeida@escola.com",
+          phone: "(11) 98765-3333",
+          registration: "PROF2023003",
+          subjects: ["historia", "filosofia"],
+          status: "active",
+          birthDate: "1978-03-10"
+        },
+        {
+          id: 4,
+          name: "Fernanda Costa",
+          avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+          email: "fernanda.costa@escola.com",
+          phone: "(11) 98765-4444",
+          registration: "PROF2023004",
+          subjects: ["geografia", "sociologia"],
+          status: "inactive",
+          birthDate: "1985-11-30"
+        },
+        {
+          id: 5,
+          name: "José Santos",
+          avatar: "https://randomuser.me/api/portraits/men/13.jpg",
+          email: "jose.santos@escola.com",
+          phone: "(11) 98765-5555",
+          registration: "PROF2023005",
+          subjects: ["ciencias", "biologia"],
+          status: "active",
+          birthDate: "1975-09-05"
+        }
+      ];
+
+      // Mapeamento de disciplinas para nomes legíveis
+      const subjectNames = {
+        "matematica": "Matemática",
+        "portugues": "Português",
+        "historia": "História",
+        "geografia": "Geografia",
+        "ciencias": "Ciências",
+        "fisica": "Física",
+        "biologia": "Biologia",
+        "quimica": "Química",
+        "literatura": "Literatura",
+        "filosofia": "Filosofia",
+        "sociologia": "Sociologia",
+        "ingles": "Inglês",
+        "artes": "Artes",
+        "educacao-fisica": "Educação Física"
+      };
+
+      // Elementos DOM
+      const teachersTableBody = document.getElementById('teachersTableBody');
+      const teacherModal = document.getElementById('teacherModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const teacherForm = document.getElementById('teacherForm');
+      const addTeacherBtn = document.getElementById('addTeacherBtn');
+      const closeModal = document.getElementById('closeModal');
+      const cancelBtn = document.getElementById('cancelBtn');
+      const saveTeacherBtn = document.getElementById('saveTeacherBtn');
+
+      // Variáveis de estado
+      let currentTeacherId = null;
+      let isEditing = false;
+
+      // Carregar tabela de professores
+      function loadTeachers() {
+        teachersTableBody.innerHTML = '';
+        
+        if (teachers.length === 0) {
+          teachersTableBody.innerHTML = `
+            <tr>
+              <td colspan="5">
+                <div class="empty-state">
+                  <div class="empty-state-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                  </div>
+                  <h3 class="empty-state-title">Nenhum professor cadastrado</h3>
+                  <p class="empty-state-text">Adicione novos professores clicando no botão acima</p>
+                </div>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        teachers.forEach(teacher => {
+          const tr = document.createElement('tr');
+          
+          // Criar badges de disciplinas
+          let subjectsHTML = '';
+          teacher.subjects.forEach(subject => {
+            subjectsHTML += `<span class="badge subject-badge">${subjectNames[subject] || subject}</span>`;
+          });
+          
+          tr.innerHTML = `
+            <td>
+              <div class="teacher-info">
+                <img src="${teacher.avatar}" alt="${teacher.name}" class="teacher-avatar">
+                <div>
+                  <div class="teacher-name">${teacher.name}</div>
+                  <div class="teacher-id">${teacher.email}</div>
+                </div>
+              </div>
+            </td>
+            <td>${teacher.registration}</td>
+            <td>${subjectsHTML}</td>
+            <td>
+              <span class="badge ${teacher.status === 'active' ? 'badge-active' : 'badge-inactive'}">
+                ${teacher.status === 'active' ? 'Ativo' : 'Inativo'}
+              </span>
+            </td>
+            <td>
+              <div class="actions">
+                <button class="action-btn edit" data-id="${teacher.id}">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn delete" data-id="${teacher.id}">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <button class="action-btn view" data-id="${teacher.id}">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </td>
+          `;
+          teachersTableBody.appendChild(tr);
+        });
+
+        // Adicionar eventos aos botões de ação
+        document.querySelectorAll('.action-btn.edit').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const teacherId = parseInt(e.currentTarget.getAttribute('data-id'));
+            editTeacher(teacherId);
+          });
+        });
+
+        document.querySelectorAll('.action-btn.delete').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const teacherId = parseInt(e.currentTarget.getAttribute('data-id'));
+            if (confirm('Tem certeza que deseja excluir este professor?')) {
+              deleteTeacher(teacherId);
+            }
+          });
+        });
+      }
+
+      // Abrir modal para adicionar professor
+      function openAddTeacherModal() {
+        isEditing = false;
+        currentTeacherId = null;
+        modalTitle.textContent = 'Adicionar Novo Professor';
+        teacherForm.reset();
+        
+        // Limpar seleções múltiplas
+        Array.from(document.getElementById('teacherSubjects').options).forEach(option => {
+          option.selected = false;
+        });
+        
+        teacherModal.style.display = 'flex';
+      }
+
+      // Abrir modal para editar professor
+      function editTeacher(id) {
+        const teacher = teachers.find(t => t.id === id);
+        if (!teacher) return;
+
+        isEditing = true;
+        currentTeacherId = id;
+        modalTitle.textContent = 'Editar Professor';
+        
+        document.getElementById('teacherName').value = teacher.name;
+        document.getElementById('teacherEmail').value = teacher.email;
+        document.getElementById('teacherPhone').value = teacher.phone;
+        document.getElementById('teacherBirth').value = teacher.birthDate;
+        document.getElementById('teacherStatus').value = teacher.status;
+        
+        // Selecionar disciplinas
+        Array.from(document.getElementById('teacherSubjects').options).forEach(option => {
+          option.selected = teacher.subjects.includes(option.value);
+        });
+        
+        teacherModal.style.display = 'flex';
+      }
+
+      // Salvar professor (adicionar ou editar)
+      function saveTeacher() {
+        const name = document.getElementById('teacherName').value;
+        const email = document.getElementById('teacherEmail').value;
+        const phone = document.getElementById('teacherPhone').value;
+        const birthDate = document.getElementById('teacherBirth').value;
+        const status = document.getElementById('teacherStatus').value;
+        
+        // Obter disciplinas selecionadas
+        const subjectsSelect = document.getElementById('teacherSubjects');
+        const selectedSubjects = Array.from(subjectsSelect.selectedOptions).map(option => option.value);
+
+        if (!name || !email || !phone || !birthDate || selectedSubjects.length === 0 || !status) {
+          alert('Por favor, preencha todos os campos obrigatórios.');
+          return;
+        }
+
+        if (isEditing) {
+          // Editar professor existente
+          const teacherIndex = teachers.findIndex(t => t.id === currentTeacherId);
+          if (teacherIndex !== -1) {
+            teachers[teacherIndex] = {
+              ...teachers[teacherIndex],
+              name,
+              email,
+              phone,
+              birthDate,
+              subjects: selectedSubjects,
+              status
+            };
+          }
+        } else {
+          // Adicionar novo professor
+          const newId = teachers.length > 0 ? Math.max(...teachers.map(t => t.id)) + 1 : 1;
+          const newTeacher = {
+            id: newId,
+            name,
+            avatar: `https://randomuser.me/api/portraits/${Math.random() > 0.5 ? 'men' : 'women'}/${Math.floor(Math.random() * 50) + 11}.jpg`,
+            email,
+            phone,
+            registration: `PROF2023${String(newId).padStart(3, '0')}`,
+            subjects: selectedSubjects,
+            status,
+            birthDate
+          };
+          teachers.push(newTeacher);
+        }
+
+        loadTeachers();
+        closeTeacherModal();
+      }
+
+      // Excluir professor
+      function deleteTeacher(id) {
+        const teacherIndex = teachers.findIndex(t => t.id === id);
+        if (teacherIndex !== -1) {
+          teachers.splice(teacherIndex, 1);
+          loadTeachers();
+        }
+      }
+
+      // Fechar modal
+      function closeTeacherModal() {
+        teacherModal.style.display = 'none';
+      }
+
+      // Event Listeners
+      addTeacherBtn.addEventListener('click', openAddTeacherModal);
+      closeModal.addEventListener('click', closeTeacherModal);
+      cancelBtn.addEventListener('click', closeTeacherModal);
+      saveTeacherBtn.addEventListener('click', saveTeacher);
+
+      // Fechar modal ao clicar fora
+      window.addEventListener('click', (e) => {
+        if (e.target === teacherModal) {
+          closeTeacherModal();
+        }
+      });
+
+      // Carregar dados iniciais
+      loadTeachers();
+    });
+  </script>
+</body>
+</html>
